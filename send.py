@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import tornado.httpserver
 import tornado.websocket
 import tornado.ioloop
@@ -16,7 +18,7 @@ class WSHandler(tornado.websocket.WebSocketHandler):
         return True
 
     def open(self):
-		#Send message periodic via socket upon a time interval
+        #Send message periodic via socket upon a time interval
         self.callback = PeriodicCallback(self.send_values, timeInterval)
         self.callback.start()
 
@@ -35,6 +37,7 @@ application = tornado.web.Application([
 ])
 
 if __name__ == "__main__":
+    print ("http://localhost:{}".format(port))
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(port)
     tornado.ioloop.IOLoop.instance().start()
