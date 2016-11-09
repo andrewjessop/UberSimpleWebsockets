@@ -37,7 +37,7 @@ application = tornado.web.Application([
 ])
 
 if __name__ == "__main__":
-    print ("http://localhost:{}".format(port))
+    print ("Port: {}".format(port))
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(port)
     tornado.ioloop.IOLoop.instance().start()

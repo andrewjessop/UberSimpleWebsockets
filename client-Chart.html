@@ -66,6 +66,22 @@ function reconnect() {
 
 <script type="text/javascript">
 
+	// Define the chart and options variables as global so we don't leak memory
+	var chart = null;
+	var options = {
+		title:"Fruit Consumption",
+		width: 600,
+		height: 400,
+		bar: { groupWidth: "95%" },
+		legend: { position: "none" },
+		//animation: { duration: 800 },
+		hAxis: {
+			// set these values to make the initial animation smoother
+			minValue: 0,
+			maxValue: 10
+		}
+	};
+
 	function drawVisualization() {
 		// Create and populate the data table from the values received via websocket
 		var data = google.visualization.arrayToDataTable([
@@ -76,9 +92,19 @@ function reconnect() {
 			[4, explodedValues[3]]
 		]);
 
-		// use a DataView to 0-out all the values in the data set for the initial draw
+		if (chart === undefined || chart === null) {
+			//chart = new Dygraph.GVizChart(document.getElementById('visualization'));
+			chart = new google.visualization.LineChart(document.getElementById('visualization'));
+		} else {
+			// Google chart specific function
+			//chart.clearChart();
+			// DyGraph specific function
+			//chart.destroy();
+		}
+
 		var view = new google.visualization.DataView(data);
 		/*
+		// use a DataView to 0-out all the values in the data set for the initial draw
 		view.setColumns([0, {
 			type: 'number',
 			label: data.getColumnLabel(1),
@@ -86,28 +112,13 @@ function reconnect() {
 		}]);
 		*/
 
-		// Create and draw the plot
-		//var chart = new google.visualization.LineChart(document.getElementById('visualization'));
-		var chart = new Dygraph.GVizChart(document.getElementById('visualization'));
 
-		var options = {
-			title:"Fruit Consumption",
-			width: 600,
-			height: 400,
-			bar: { groupWidth: "95%" },
-			legend: { position: "none" },
-			//animation: { duration: 800 },
-			hAxis: {
-				// set these values to make the initial animation smoother
-				minValue: 0,
-				maxValue: 10
-			}
-		};
-
+		/*
 		var runOnce = google.visualization.events.addListener(chart, 'ready', function () {
 			google.visualization.events.removeListener(runOnce);
 			chart.draw(data, options);
 		});
+		*/
 
 		chart.draw(view, options);
 
@@ -124,11 +135,11 @@ function reconnect() {
 
 </head>
 <body onload="init()">
-<h3>Uber Simple Websockets - Real Time Chart</h3>
+	<h3>Uber Simple Websockets - Real Time Chart</h3>
 
-<div id="visualization"></div>
+	<div id="visualization"></div>
 
-<button onclick="reconnect()">Reconnect</button>
+	<button onclick="reconnect()">Reconnect</button>
 
 </body>
 </html>
